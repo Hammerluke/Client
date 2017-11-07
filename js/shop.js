@@ -46,6 +46,7 @@ $bookList.append(bookHtml);
 
 $(".purchase-button").click(function () {
     $("#purchase-modal").modal("toggle");
+
     const bookId = $(this).data("book-id");
     const book = books.find((book) => book.id === bookId);
     SDK.Book.addToBasket(book);
@@ -56,8 +57,11 @@ $(".purchase-button").click(function () {
 
 $("#purchase-modal").on("shown.bs.modal", () => {
     const basket = SDK.Storage.load("basket");
-const $modalTbody = $("#modal-tbody");
-basket.forEach((entry) => {
+    const $modalTbody = $("#modal-tbody");
+
+    //clearer tabellen der ligger inde i den modal der popper op når purchase trykkes.
+    $modalTbody.html("");
+    basket.forEach((entry) => {
 
     $modalTbody.append(`
         <tr>
