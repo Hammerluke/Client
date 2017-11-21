@@ -56,9 +56,7 @@ const SDK = {
                 method: "GET",
                 url: "/user/getItems",
                 headers: {
-                    filter: {
-                        include: ["authors"]
-                    }
+                    authorization: "Bearer " + SDK.User.current().token
                 }
             }, cb);
         },
