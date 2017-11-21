@@ -85,6 +85,21 @@ const SDK = {
             return JSON.parse(localStorage.getItem("user"));
         },
         logOut: () => {
+            SDK.request({
+                data: {
+                    user_id: SDK.User.current().user_id
+                },
+                method: "POST",
+                url: "/start/logout",
+                headers: {
+                    authorization: "Bearer " + SDK.User.current().token
+                }
+            }, (err, data) => {
+                if (err) return cb(err);
+                cb(null, data);
+
+            });
+
             localStorage.removeItem("user");
             window.location.href = "shop.html";
         },
