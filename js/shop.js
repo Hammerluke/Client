@@ -3,7 +3,7 @@ $(document).ready(() => {
     SDK.User.loadNav();
 const $bookList = $("#book-list");
 
-SDK.Book.findAll((err, books) => {
+SDK.Item.findAll((err, books) => {
     books.forEach((book) => {
 
     const bookHtml = `
@@ -49,7 +49,7 @@ $(".purchase-button").click(function () {
 
     const bookId = $(this).data("book-id");
     const book = books.find((book) => book.id === bookId);
-    SDK.Book.addToBasket(book);
+    SDK.Item.addToBasket(book);
 
 });
 

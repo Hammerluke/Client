@@ -1,29 +1,23 @@
 $(document).ready(() => {
 
-  SDK.User.loadNav();
+  SDK.User.loadNav()
   const currentUser = SDK.User.current();
   const $basketTbody = $("#basket-tbody");
 
   $(".page-header").html(`
-    <h1>Hi, ${currentUser.firstName} ${currentUser.lastName}</h1>
-  `);
-
-  $(".img-container").html(`
-    <img src="${currentUser.avatarUrl}" height="150"/>
+    <h1>Hi, ${currentUser.username}</h1>
   `);
 
   $(".profile-info").html(`
     <dl>
-        <dt>Name</dt>
-        <dd>${currentUser.firstName} ${currentUser.lastName}</dd>
-        <dt>Email</dt>
-        <dd>${currentUser.email}</dd>
+        <dt>Username</dt>
+        <dd>${currentUser.username}</dd>
         <dt>ID</dt>
-        <dd>${currentUser.id}</dd>
+        <dd>${currentUser.user_id}</dd>
      </dl>
   `);
 
-  SDK.Order.findMine((err, orders) => {
+  /* SDK.Order.findMine((err, orders) => {
     if(err) throw err;
     orders.forEach(order => {
       $basketTbody.append(`
@@ -35,6 +29,8 @@ $(document).ready(() => {
       `);
     });
   });
+
+  */
 
   function parseOrderItems(items){
     return items.map(item => {

@@ -2,22 +2,43 @@ $(document).ready(() => {
 
   SDK.User.loadNav();
 
-  $("#login-button").click(() => {
+  $("#login-button").click((e) => {
+      e.preventDefault();
 
-    const email = $("#inputEmail").val();
-    const password = $("#inputPassword").val();
+    const username = $("#inputLoginUsername").val();
+    const password = $("#inputLoginPassword").val();
 
-    SDK.User.login(email, password, (err, data) => {
+    SDK.User.login(username, password, (err, data) => {
       if (err && err.xhr.status === 401) {
         $(".form-group").addClass("has-error");
       }
       else if (err){
-        console.log("BAd stuff happened")
+        console.log("Login error")
       } else {
-        window.location.href = "my-page.html";
+          console.log(data);
+          window.location.href = "my-page.html";
       }
     });
 
   });
 
+    $("#signup-button").click((e) => {
+        e.preventDefault();
+
+        const username = $("#inputSignupUsername").val();
+        const password = $("#inputSignupPassword").val();
+
+        SDK.User.signup(username, password, (err, data) => {
+            if (err && err.xhr.status === 401) {
+                $(".form-group").addClass("has-error");
+            }
+            else if (err){
+                console.log("Sign up error")
+            } else {
+                window.location.href = "login.html";
+
+         }
+      });
+
+    });
 });
