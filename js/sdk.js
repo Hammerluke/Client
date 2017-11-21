@@ -69,15 +69,15 @@ const SDK = {
                 method: "POST",
                 url: "/user/createOrder",
                 data: data,
-                headers: {authorization: SDK.Storage.load("tokenId")}
+                headers: {authorization: SDK.Storage.load("token")}
             }, cb);
         },
         findMine: (cb) => {
             SDK.request({
                 method: "GET",
-                url: "/user/getOrdersById/" + SDK.User.current().id,
+                url: "/user/getOrdersById/" + SDK.User.current().user_id,
                 headers: {
-                    authorization: SDK.Storage.load("tokenId")
+                    authorization: "Bearer " + SDK.User.current().token,
                 }
             }, cb);
         }
@@ -87,9 +87,7 @@ const SDK = {
             return JSON.parse(localStorage.getItem("user"));
         },
         logOut: () => {
-            SDK.Storage.remove("tokenId");
-            SDK.Storage.remove("userId");
-            SDK.Storage.remove("user");
+            localStorage.removeItem("user");
             window.location.href = "shop.html";
         },
         login: (username, password, cb) => {
