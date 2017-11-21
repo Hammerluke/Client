@@ -21,3 +21,8 @@ dd {
 .book-container .price-label p {
     margin: 4px 0 0 0;
 }
+
+.panel-body img {
+    width: 200px;
+    height: 200px;
+}

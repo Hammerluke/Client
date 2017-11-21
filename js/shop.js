@@ -13,10 +13,10 @@ SDK.Item.findAll((err, items) => {
                     <h3 class="panel-title">${item.itemName}</h3>
                 </div>
                 <div class="panel-body">
-                    <div class="col-lg-4">
+                    <div class="col-lg-8">
                     <img src="${item.itemImage}"/>
                     </div>
-                    <div class="col-lg-8">
+                    <div class="col-lg-4">
                       <dl>
                         <dt>Beskrivelse</dt>
                         <dd>${item.itemDescription}</dd>
