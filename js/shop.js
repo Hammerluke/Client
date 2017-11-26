@@ -1,13 +1,16 @@
 $(document).ready(() => {
 
     SDK.User.loadNav();
-const $itemList = $("#item-list");
+    const currentUser = SDK.User.current();
+    const $itemList = $("#item-list");
 
-SDK.Item.findAll((err, items) => {
+    if(currentUser) {
+
+    SDK.Item.findAll((err, items) => {
     items.forEach((item) => {
 
     const itemHtml = `
-        <div class="col-lg-4 book-container">
+        <div class="col-lg-4 item-container">
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <h3 class="panel-title">${item.itemName}</h3>
@@ -18,7 +21,7 @@ SDK.Item.findAll((err, items) => {
                     </div>
                     <div class="col-lg-4">
                       <dl>
-                        <dt>Beskrivelse</dt>
+                        <dt>Description</dt>
                         <dd>${item.itemDescription}</dd>
                        
                       </dl>
@@ -30,7 +33,7 @@ SDK.Item.findAll((err, items) => {
                             <p>Kr. <span class="price-amount">${item.itemPrice}</span></p>
                         </div>
                         <div class="col-lg-8 text-right">
-                            <button class="btn btn-success purchase-button" data-item-id="${item.itemId}">Add to basket</button>
+                            <button class="btn btn-success basket-button" data-item-id="${item.itemId}">Add to basket</button>
                         </div>
                     </div>
                 </div>
@@ -41,39 +44,53 @@ $itemList.append(itemHtml);
 
 });
 
-$(".purchase-button").click(function () {
+$(".basket-button").click(function () {
+    const itemId = $(this).data("item-id");
+    const item = items.find((item) => item.itemId === itemId);
+    SDK.Item.addToBasket(item);
     $("#purchase-modal").modal("toggle");
 
-    const itemId = $(this).data("item-id");
-    const item = items.find((item) => item.id === itemId);
-    SDK.Item.addToBasket(item);
-
-});
-
+  });
 });
 
 $("#purchase-modal").on("shown.bs.modal", () => {
     const basket = SDK.Storage.load("basket");
     const $modalTbody = $("#modal-tbody");
-
-    //clearer tabellen der ligger inde i den modal der popper op når purchase trykkes.
-    $modalTbody.html("");
+    $modalTbody.empty();
     basket.forEach((entry) => {
-
-    $modalTbody.append(`
-        <tr>
-            <td>
-             <!--   <img src="$//{entry.item.imgUrl}" height="60"/> -->
-            </td>
-            <td>${entry.items.itemName}</td>
+        const total = entry.item.itemPrice * entry.count;
+        $modalTbody.append(`
+      <tr>
+          <td>
+             <img src="${entry.item.itemImage}" height="60"/>
+          </td>
+            <td>${entry.item.itemName}</td>
             <td>${entry.count}</td>
-            <td>kr. ${entry.items.itemPrice}</td>
-            <td>kr. 0</td>
-        </tr>
-      `);
-});
+            <td>${entry.item.itemPrice} kr.</td>
+            <td>${total} kr.</td>
+            <td>
+            <button class="btn btn-default remove-icon" data-item-id="${entry.item.itemId}">
+                <span class="glyphicon glyphicon-remove"></span>
+            </button>
+            </td>
+                
+      </tr>
+      
+    `);
 
-}
-);
-});
+    });
 
+    $(".remove-icon").click(function () {
+        const itemId = $(this).data("item-id");
+        SDK.Item.removeFromBasket(itemId);
+        $("#purchase-modal").modal("toggle");
+
+    });
+
+ });
+
+    } else {
+        window.location.href = "login.html";
+    }
+
+});

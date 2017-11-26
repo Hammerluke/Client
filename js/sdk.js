@@ -25,6 +25,7 @@ const SDK = {
         });
 
     },
+
     Item: {
         addToBasket: (item) => {
             let basket = SDK.Storage.load("basket");
@@ -38,7 +39,7 @@ const SDK = {
             }
 
             //Does the item already exist?
-            let foundItem = basket.find(b => b.item.id === item.id);
+            let foundItem = basket.find(i => i.item.itemId === item.itemId);
             if (foundItem) {
                 let i = basket.indexOf(foundItem);
                 basket[i].count++;
@@ -51,6 +52,22 @@ const SDK = {
 
             SDK.Storage.persist("basket", basket);
         },
+
+        removeFromBasket: (itemId) => {
+            let basket = SDK.Storage.load("basket");
+            for (let i = 0; i<basket.length; i++){
+                if (basket[i].item.itemId === itemId){
+                    if (basket[i].count > 1){
+                        basket[i].count--;
+                    }
+                    else{
+                        basket.splice(i, 1);
+                    }
+                }
+            }
+            SDK.Storage.persist("basket", basket);
+        },
+
         findAll: (cb) => {
             SDK.request({
                 method: "GET",
@@ -61,30 +78,69 @@ const SDK = {
             }, cb);
         },
     },
+
     Order: {
-        create: (data, cb) => {
+        create: (items, cb) => {
             SDK.request({
                 method: "POST",
                 url: "/user/createOrder",
-                data: data,
-                headers: {authorization: SDK.Storage.load("token")}
-            }, cb);
+                data:
+            {
+                    User_userId: SDK.User.current().user_id,
+                    items: items
+            },
+            headers: {
+                authorization: "Bearer " + SDK.User.current().token
+
+            }
+        }, (err, data) => {
+                if (err) return cb(err);
+                cb(null, data);
+            })
         },
+
         findMine: (cb) => {
             SDK.request({
                 method: "GET",
                 url: "/user/getOrdersById/" + SDK.User.current().user_id,
                 headers: {
-                    authorization: "Bearer " + SDK.User.current().token,
+                    authorization: "Bearer " + SDK.User.current().token
                 }
             }, cb);
+       },
+
+        findAll: (cb) => {
+            SDK.request({
+                method: "GET",
+                url: "/staff/getOrders",
+                headers: {
+                    authorization: "Bearer " + SDK.User.current().token
+            }
+        }, cb);
+    },
+
+    makeReady: (orderId, cb) => {
+        SDK.request({
+          method: "POST",
+          url: "/staff/makeReady/" + orderId,
+          data: {
+              orderId: orderId
+                },
+                headers: {
+                    authorization: "Bearer " + SDK.User.current().token
+                }
+            }, (err, data) => {
+                if (err) return cb(err);
+                cb(null, data);
+            });
         }
     },
+
     User: {
         current: () => {
             return JSON.parse(localStorage.getItem("user"));
         },
-        logOut: () => {
+        logOut: (user_id, cb) => {
             SDK.request({
                 data: {
                     user_id: SDK.User.current().user_id
@@ -101,6 +157,7 @@ const SDK = {
             });
 
             localStorage.removeItem("user");
+            SDK.Storage.remove("basket")
             window.location.href = "shop.html";
         },
         login: (username, password, cb) => {
@@ -113,18 +170,16 @@ const SDK = {
                 method: "POST"
             }, (err, data) => {
 
-                console.log('tester', err, data)
-
                 //On login-error
                 if (err) return cb(err);
-                console.log('sdk test', data);
+                //console.log('sdk test', data);
                 localStorage.setItem("user", JSON.stringify(data));
 
                 cb(null, data);
 
             });
         },
-        signup: (username, password, cb) => {
+        create: (username, password, cb) => {
             SDK.request({
                 data: {
                     username: username,
@@ -134,7 +189,7 @@ const SDK = {
                 method: "POST"
             }, (err, data) => {
 
-                //On signup-error
+                //On create-error
                 if (err) return cb(err);
 
                 cb(null, data);
@@ -146,19 +201,34 @@ const SDK = {
             $("#nav-container").load("nav.html", () => {
                 const currentUser = SDK.User.current();
                 if (currentUser) {
-                    $(".navbar-right").html(`
-        <li><a href="my-page.html">Your orders</a></li>
-        <li><a href="#" id="logout-link">Logout</a></li>
+                    if(!SDK.User.current().isPersonel) {
+                        $(".navbar-left").html(`
+                        <li><a href="shop.html">Shop</a></li>
+                        <li><a href="checkout.html">Basket</a></li>
       `);
+
+                        $(".navbar-right").html(`
+                        <li><a href="my-page.html">My page</a></li>
+                        <li><a href="#" id="logout-link">Log out</a></li>
+      `);
+                     } else {
+                        $(".navbar-right").html(`
+                        <li><a href="#" id="logout-link">Log out</a></li>
+      `);
+
+                     }
+
                 } else {
                     $(".navbar-right").html(`
-        <li><a href="login.html">Log in<span class="sr-only">(current)</span></a></li>
+                    <li><a href="login.html">Log in<span class="sr-only">(current)</span></a></li>
       `);
                 }
                 $("#logout-link").click(() => SDK.User.logOut());
+
             });
         }
     },
+
     Storage: {
         prefix: "cbsKatineSDK",
         persist: (key, value) => {

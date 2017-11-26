@@ -9,36 +9,56 @@ $(document).ready(() => {
     const password = $("#inputLoginPassword").val();
 
     SDK.User.login(username, password, (err, data) => {
-      if (err && err.xhr.status === 401) {
+      if (err) {
         $(".form-group").addClass("has-error");
       }
       else if (err){
         console.log("Login error")
+
       } else {
-          console.log(data);
-          window.location.href = "my-page.html";
+          loadUser();
       }
     });
 
   });
 
-    $("#signup-button").click((e) => {
+  loadUser = () => {
+    if(SDK.User.current().isPersonel) {
+        window.location.href = "staff.html";
+    } else {
+        window.location.href = "shop.html";
+
+    }
+
+  }
+
+    $("#createUser-button").click((e) => {
+
         e.preventDefault();
 
-        const username = $("#inputSignupUsername").val();
-        const password = $("#inputSignupPassword").val();
+        const username = $("#newInputUsername").val();
+        const password = $("#newInputPassword").val();
+        const verifyPassword = $("#verifyPassword").val();
 
-        SDK.User.signup(username, password, (err, data) => {
-            if (err && err.xhr.status === 401) {
-                $(".form-group").addClass("has-error");
-            }
-            else if (err){
-                console.log("Sign up error")
-            } else {
-                window.location.href = "login.html";
+        if(password !== verifyPassword) {
+            alert(" The passwords do not match!");
 
-         }
-      });
+        } else {
+
+            SDK.User.create(username, password, (err, data) => {
+                if (err) {
+                    $(".form-group").addClass("has-error");
+                }
+                else if (err){
+                    console.log("Error")
+
+                } else {
+                    window.location.href = "my-page.html";
+                }
+            });
+
+        }
 
     });
+
 });
