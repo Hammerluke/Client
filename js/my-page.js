@@ -7,7 +7,7 @@ $(document).ready(() => {
     if(currentUser) {
 
   $(".page-header").html(`
-    <h1>Hi, ${currentUser.username}</h1>
+    <h1>Bon appetit, ${currentUser.username}</h1>
   `);
 
   SDK.Order.findMine((err, orders) => {

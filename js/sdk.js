@@ -203,7 +203,7 @@ const SDK = {
                     if(!SDK.User.current().isPersonel) {
                         $(".navbar-left").html(`
                         <li><a href="shop.html">Shop</a></li>
-                        <li><a href="checkout.html">Basket</a></li>
+                        <li><a href="checkout.html">Checkout</a></li>
       `);
 
                         $(".navbar-right").html(`
