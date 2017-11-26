@@ -26,9 +26,6 @@ $(document).ready(() => {
          basket.forEach(entry => {
              let subtotal = entry.item.itemPrice * entry.count;
              total += subtotal;
-
-             console.log(entry);
-
              $modalTbody.append(`
         <tr>
             <td>

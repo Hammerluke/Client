@@ -172,7 +172,6 @@ const SDK = {
 
                 //On login-error
                 if (err) return cb(err);
-                //console.log('sdk test', data);
                 localStorage.setItem("user", JSON.stringify(data));
 
                 cb(null, data);
