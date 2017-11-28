@@ -3,8 +3,11 @@ $(document).ready(() => {
   SDK.User.loadNav()
   const currentUser = SDK.User.current();
   const $basketTbody = $("#basket-tbody");
+  const $noOrdersContainer = $("#no-orders-container");
+  const $ordersContainer = $("#orders-container");
 
     if(currentUser) {
+        if (!SDK.User.current().isPersonel) {
 
   $(".page-header").html(`
     <h1>Bon appetit, ${currentUser.username}</h1>
@@ -35,8 +38,11 @@ $(document).ready(() => {
     });
   });
 
-    } else {
-        window.location.href = "login.html";
+        } else {
+            window.location.href = "staff.html";
+        }
+        } else {
+            window.location.href = "login.html";
     }
 
 });

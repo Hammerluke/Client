@@ -5,6 +5,7 @@ $(document).ready(() => {
     const $itemList = $("#item-list");
 
     if(currentUser) {
+        if (!SDK.User.current().isPersonel) {
 
     SDK.Item.findAll((err, items) => {
     items.forEach((item) => {
@@ -55,13 +56,13 @@ $(".basket-button").click(function () {
 
 $("#purchase-modal").on("show.bs.modal", () => {
     const basket = SDK.Storage.load("basket");
-    const $modalTBody = $("#modal-tbody");
+    const $modalTbody = $("#modal-tbody");
     let total = 0;
-    $modalTBody.empty();
+    $modalTbody.empty();
     basket.forEach((entry) => {
         let subtotal = entry.item.itemPrice * entry.count;
         total += subtotal;
-        $modalTBody.append(`
+        $modalTbody.append(`
       <tr>
           <td>
              <img src="${entry.item.itemImage}" height="60"/>
@@ -82,11 +83,11 @@ $("#purchase-modal").on("show.bs.modal", () => {
 
     });
 
-    $modalTBody.append(`
+    $modalTbody.append(`
       <tr>
         <td colspan="3"></td>
         <td><b>Total</b></td>
-        <td>kr. ${total}</td>
+        <td>${total} kr.</td>
         <td></td>
       </tr>
     `);
@@ -101,7 +102,11 @@ $("#purchase-modal").on("show.bs.modal", () => {
  });
 
     } else {
-        window.location.href = "login.html";
+        window.location.href = "staff.html";
     }
+
+ } else {
+   window.location.href = "login.html";
+ }
 
 });

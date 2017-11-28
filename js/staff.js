@@ -6,6 +6,7 @@ $(document).ready(() => {
     const $orderList = $("#order-list");
 
     if(currentUser) {
+        if (SDK.User.current().isPersonel) {
 
         SDK.Order.findAll((err, orders) => {
         if (err) throw err;
@@ -55,6 +56,9 @@ $(document).ready(() => {
             });
         })
 
+        } else {
+            window.location.href = "my-page.html";
+        }
     } else {
          window.location.href = "login.html";
     }
