@@ -2,7 +2,6 @@ $(document).ready(() => {
 
   SDK.User.loadNav();
 
-
   const currentUser = SDK.User.current();
   const $basketTbody = $("#basket-tbody");
   const $nothingInBasketContainer = $("#nothing-in-basket-container");
@@ -23,11 +22,9 @@ $(document).ready(() => {
              $nothingInBasketContainer.hide();
          }
 
-
          basket.forEach(entry => {
              let subtotal = entry.item.itemPrice * entry.count;
              total += subtotal;
-
 
              $basketTbody.append(`
         <tr>
@@ -35,7 +32,15 @@ $(document).ready(() => {
                <img src="${entry.item.itemImage}" height="120"/>
             </td>
             <td>${entry.item.itemName}</td>
-            <td>${entry.count}</td>
+            <td>
+            <button class="btn btn-default remove-icon" data-item-id="${entry.item.itemId}">
+            <span class="glyphicon glyphicon-minus"></span>
+            </button>
+            ${entry.count}
+            <button class="btn btn-default add-icon" data-item-id="${entry.item.itemId}">
+            <span class="glyphicon glyphicon-plus"></span>
+            </button>
+            </td>
             <td>${entry.item.itemPrice} kr.</td>
             <td>${subtotal} kr.</td>
         <td>
@@ -64,6 +69,12 @@ $(document).ready(() => {
           const itemId = $(this).data("item-id");
           SDK.Item.removeFromBasket(itemId);
           location.reload();
+      });
+
+      $(".add-icon").click(function () {
+          const itemId = $(this).data("item-id");
+          SDK.Item.addToBasket(itemId);
+          //location.reload();
       });
 
       $("#clear-basket-button").click(() => {
