@@ -73,8 +73,8 @@ $(document).ready(() => {
 
       $(".add-icon").click(function () {
           const itemId = $(this).data("item-id");
-          SDK.Item.addToBasket(itemId);
-          //location.reload();
+          SDK.Item.addOneToBasket(itemId);
+          location.reload();
       });
 
       $("#clear-basket-button").click(() => {
