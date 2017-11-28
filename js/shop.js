@@ -69,7 +69,7 @@ $("#purchase-modal").on("show.bs.modal", () => {
           </td>
             <td>${entry.item.itemName}</td>
             <td>
-            <button class="btn btn-default remove-icon" data-item-id="${entry.item.itemId}">
+            <button class="btn btn-default removeOne-icon" data-item-id="${entry.item.itemId}">
             <span class="glyphicon glyphicon-minus"></span>
             </button>
             ${entry.count}
@@ -80,7 +80,7 @@ $("#purchase-modal").on("show.bs.modal", () => {
             <td>${entry.item.itemPrice} kr.</td>
             <td>${subtotal} kr.</td>
             <td>
-            <button class="btn btn-default remove-icon" data-item-id="${entry.item.itemId}">
+            <button class="btn btn-default removeLength-icon" data-item-id="${entry.item.itemId}">
                 <span class="glyphicon glyphicon-remove"></span>
             </button>
             </td>
@@ -100,18 +100,24 @@ $("#purchase-modal").on("show.bs.modal", () => {
       </tr>
     `);
 
-    $(".remove-icon").click(function () {
-        const itemId = $(this).data("item-id");
-        SDK.Item.removeFromBasket(itemId);
-        $("#purchase-modal").modal("show");
-
-    });
-
     $(".add-icon").click(function () {
         const itemId = $(this).data("item-id");
         SDK.Item.addOneToBasket(itemId);
         $("#purchase-modal").modal("show");
     });
+
+    $(".removeOne-icon").click(function () {
+        const itemId = $(this).data("item-id");
+        SDK.Item.removeFromBasket(itemId);
+        $("#purchase-modal").modal("show");
+    });
+
+    $(".removeLength-icon").click(function () {
+        const itemId = $(this).data("item-id");
+        SDK.Item.removeBasketLength(itemId);
+        $("#purchase-modal").modal("show");
+    });
+
 
 });
 

@@ -53,6 +53,21 @@ const SDK = {
             SDK.Storage.persist("basket", basket);
         },
 
+        addOneToBasket: (itemId) => {
+            let basket = SDK.Storage.load("basket");
+            for (let i = 0; i<basket.length; i++){
+                if (basket[i].item.itemId === itemId){
+                    if (basket[i].count > 0){
+                        basket[i].count++;
+                    }
+                    else{
+                        basket.splice(i, 1);
+                    }
+                }
+            }
+            SDK.Storage.persist("basket", basket);
+        },
+
         removeFromBasket: (itemId) => {
             let basket = SDK.Storage.load("basket");
             for (let i = 0; i<basket.length; i++){
@@ -68,20 +83,18 @@ const SDK = {
             SDK.Storage.persist("basket", basket);
         },
 
-        addOneToBasket: (itemId) => {
+        removeBasketLength: (itemId) => {
             let basket = SDK.Storage.load("basket");
             for (let i = 0; i<basket.length; i++){
                 if (basket[i].item.itemId === itemId){
-                    if (basket[i].count > 0){
-                        basket[i].count++;
-                    }
-                    else{
+                    if (basket[i].count > 1){
                         basket.splice(i, 1);
                     }
                 }
             }
             SDK.Storage.persist("basket", basket);
         },
+
 
         findAll: (cb) => {
             SDK.request({

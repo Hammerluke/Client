@@ -33,7 +33,7 @@ $(document).ready(() => {
             </td>
             <td>${entry.item.itemName}</td>
             <td>
-            <button class="btn btn-default remove-icon" data-item-id="${entry.item.itemId}">
+            <button class="btn btn-default removeOne-icon" data-item-id="${entry.item.itemId}">
             <span class="glyphicon glyphicon-minus"></span>
             </button>
             ${entry.count}
@@ -44,7 +44,7 @@ $(document).ready(() => {
             <td>${entry.item.itemPrice} kr.</td>
             <td>${subtotal} kr.</td>
         <td>
-        <button class="btn btn-default remove-icon" data-item-id="${entry.item.itemId}">
+        <button class="btn btn-default removeLength-icon" data-item-id="${entry.item.itemId}">
             <span class="glyphicon glyphicon-remove"></span>
          </button>
             </td>
@@ -65,17 +65,23 @@ $(document).ready(() => {
 
       loadBasket();
 
-      $(".remove-icon").click(function () {
-          const itemId = $(this).data("item-id");
-          SDK.Item.removeFromBasket(itemId);
-          location.reload();
-      });
-
       $(".add-icon").click(function () {
           const itemId = $(this).data("item-id");
           SDK.Item.addOneToBasket(itemId);
           location.reload();
       });
+
+      $(".removeOne-icon").click(function () {
+           const itemId = $(this).data("item-id");
+           SDK.Item.removeFromBasket(itemId);
+           location.reload();
+          });
+
+          $(".removeLength-icon").click(function () {
+              const itemId = $(this).data("item-id");
+              SDK.Item.removeBasketLength(itemId);
+              location.reload();
+          });
 
       $("#clear-basket-button").click(() => {
           SDK.Storage.remove("basket");
