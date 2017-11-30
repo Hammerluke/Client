@@ -118,7 +118,7 @@ $("#purchase-modal").on("show.bs.modal", () => {
         $("#purchase-modal").modal("show");
     });
 
-    $("#clear-basket-button").click(() => {
+    $("#clear-modal-button").click(() => {
         SDK.Storage.remove("basket");
     });
 });
