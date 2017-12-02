@@ -1,7 +1,6 @@
 $(document).ready(() => {
 
   SDK.User.loadNav();
-
   const currentUser = SDK.User.current();
   const $basketTbody = $("#basket-tbody");
   const $nothingInBasketContainer = $("#nothing-in-basket-container");

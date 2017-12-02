@@ -27,6 +27,23 @@ const SDK = {
     },
 
     Item: {
+        create:(itemName, itemDescription, itemPrice, itemImage, cb) => {
+            SDK.request({
+                    method:"POST",
+                    url:"/staff/createItem",
+                    data:{
+                        itemName:itemName,
+                        itemDescription:itemDescription,
+                        itemPrice:itemPrice,
+                        itemImage:itemImage
+                    },
+                    headers: {
+                        Authorization: "Bearer " + SDK.User.current().token
+                    }
+                }
+                ,cb);
+        },
+
         addToBasket: (item) => {
             let basket = SDK.Storage.load("basket");
 
@@ -240,7 +257,9 @@ const SDK = {
       `);
                      } else {
                         $(".navbar-right").html(`
+                        <li><a href="addNewItem.html">Add product</a></li>
                         <li><a href="#" id="logout-link">Log out</a></li>
+                        
       `);
 
                      }
