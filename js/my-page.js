@@ -15,6 +15,15 @@ $(document).ready(() => {
 
   SDK.Order.findMine((err, orders) => {
     if(err) throw err;
+
+
+      if (!orders.length) {
+          $ordersContainer.hide();
+      } else {
+          $noOrdersContainer.hide();
+      }
+
+
     orders.forEach(order => {
 
         for (let i = 0; i < order.items.length; i++) {

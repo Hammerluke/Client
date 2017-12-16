@@ -4,12 +4,20 @@ $(document).ready(() => {
     SDK.User.loadNav();
     const currentUser = SDK.User.current();
     const $orderList = $("#order-list");
+    const $noOrdersContainer = $("#no-orders-container");
+    const $ordersContainer = $("#orders-container");
 
     if(currentUser) {
         if (SDK.User.current().isPersonel) {
 
         SDK.Order.findAll((err, orders) => {
         if (err) throw err;
+
+            if (!orders.length) {
+                $ordersContainer.hide();
+            } else {
+                $noOrdersContainer.hide();
+            }
 
         function isOrderReady(order) {
             return order.isReady === false;
@@ -31,9 +39,9 @@ $(document).ready(() => {
                     <div class="panel-body">
                     <div class="col-lg-8">
                         <dl>
-                            <dt>Ordre oprettet</dt>
+                            <dt>Order created</dt>
                             <dd>${order.orderTime}</dd>
-                            <dt>Varer</dt>
+                            <dt>Item</dt>
                             <dd>${$items}</dd>
                         </dl>
                         <button class="btn btn-success orderReady-button" data-order-id="${order.orderId}">Order ready</button>
